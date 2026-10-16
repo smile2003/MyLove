@@ -243,7 +243,7 @@
             <input 
               type="text" 
               id="passcodeInput" 
-              placeholder="MM/DD/YYYY (e.g. 07/05/2004)" 
+              placeholder="MM/DD/YYYY (e.g. 01/01/2001)" 
               class="w-full px-4 py-3 rounded-xl border border-sage-300 focus:border-roseRed-500 focus:ring-2 focus:ring-blush-200 outline-none transition text-center font-mono text-gray-700 tracking-widest text-lg bg-sage-50/50"
               required
               autocomplete="off"
@@ -264,7 +264,7 @@
         </form>
 
         <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-          <span>Hint: July 5, 2004</span>
+          <span>Hint: June 6, 2003</span>
           <button 
             onclick="demoUnlock()" 
             type="button" 
@@ -690,9 +690,9 @@
       const lockError = document.getElementById('lockError');
       const mainContent = document.getElementById('mainContent');
 
-      // Validates 07/05/2004 or flexible 7/5/2004
+      // Validates 06/06/2003 or flexible 6/6/2003
       const cleanInput = input.replace(/\s+/g, '');
-      if (cleanInput === '07/05/2004' || cleanInput === '7/5/2004' || cleanInput === '07052004') {
+      if (cleanInput === '06/06/2003' || cleanInput === '6/6/2003' || cleanInput === '06062003') {
         grantAccess();
       } else {
         // Trigger Shake Animation
