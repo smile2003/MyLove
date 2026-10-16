@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Luna 🌙 | Happy 1st Monthsary</title>
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Canvas Confetti Library for Celebrations -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          sage: {
+            50: '#f2f7f4',
+            100: '#e1ede6',
+            200: '#c5dbc3',
+            300: '#a1c2a8',
+            500: '#648e6f',
+            800: '#354d3c',
+          },
+          blush: {
+            50: '#fff5f8',
+            100: '#ffe3ec',
+            200: '#ffcadb',
+            400: '#ff8bb3',
+            500: '#ff5c93',
+          },
+          roseRed: {
+            500: '#e63956',
+            600: '#c9183b',
+            700: '#9e0d2a',
+          }
+        },
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', '"Nunito"', 'sans-serif'],
+          serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          letter: ['"Lora"', 'Georgia', 'serif'],
+          script: ['"Dancing Script"', '"Great Vibes"', 'cursive'],
+          cursiveTitle: ['"Great Vibes"', 'cursive'],
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Custom Animated Elements */
+  body {
+    background: linear-gradient(135deg, #e1ede6 0%, #fff5f8 50%, #ffe3ec 100%);
+    min-height: 100vh;
+  }
+
+  /* Floating Particles Animation */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    animation: floatUp linear infinite;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translateY(105vh) rotate(0deg) scale(0.8);
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.75;
+    }
+    85% {
+      opacity: 0.75;
+    }
+    100% {
+      transform: translateY(-10vh) rotate(360deg) scale(1.2);
+      opacity: 0;
+    }
+  }
+
+  /* Keyframe Shake for Wrong Password */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-12px); }
+    40%, 80% { transform: translateX(12px); }
+  }
+  .animate-shake {
+    animation: shake 0.4s ease-in-out;
+  }
+
+  /* 3D Envelope Animation Logic */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .envelope-wrapper {
+    position: relative;
+    width: 320px;
+    height: 220px;
+    background-color: #a1c2a8; /* Sage green base envelope */
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 0 20px 35px rgba(100, 142, 111, 0.25);
+    cursor: pointer;
+    transition: transform 0.4s ease;
+  }
+
+  @media (min-width: 640px) {
+    .envelope-wrapper {
+      width: 440px;
+      height: 280px;
+    }
+  }
+
+  /* Envelope Flap Top */
+  .envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background-color: #648e6f;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 20;
+  }
+
+  .envelope-wrapper.open .envelope-flap {
+    transform: rotateX(180deg);
+    z-index: 5;
+  }
+
+  /* Envelope Pocket Front */
+  .envelope-pocket {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #c5dbc3 0%, #648e6f 100%);
+    clip-path: polygon(0 0, 50% 45%, 100% 0, 100% 100%, 0 100%);
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    z-index: 15;
+  }
+
+  /* Envelope Seal Stamp */
+  .envelope-seal {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 25;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .envelope-wrapper.open .envelope-seal {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -80%) scale(0.5);
+  }
+
+  /* Paper Letter Inside Envelope */
+  .letter-paper {
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    bottom: 10px;
+    top: 10px;
+    background: #fffbf7;
+    border: 1px dashed #ffcadb;
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    opacity: 0.8;
+  }
+
+  .envelope-wrapper.open .letter-paper {
+    transform: translateY(-160px) scale(1.02);
+    opacity: 1;
+    z-index: 30;
+  }
+
+  @media (min-width: 640px) {
+    .envelope-wrapper.open .letter-paper {
+      transform: translateY(-200px) scale(1.05);
+    }
+  }
+
+  /* Custom Scrollbar for Letter */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f2f7f4;
+    border-radius: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #ff8bb3;
+    border-radius: 8px;
+  }
+
+  /* Glow Animation */
+  .glow-pulse {
+    animation: glow 2.5s infinite alternate;
+  }
+  @keyframes glow {
+    0% { box-shadow: 0 0 15px rgba(230, 57, 86, 0.2); }
+    100% { box-shadow: 0 0 30px rgba(230, 57, 86, 0.5); }
+  }
+</style>
+</head>
+<body class="font-sans text-gray-800 antialiased selection:bg-blush-200 selection:text-roseRed-700">
+
+  <!-- Floating Ambient Particles (Hearts, Leaves, Stars) -->
+  <div id="particles-container"></div>
+
+  <!-- ==================== 1. PASSCODE LOCK OVERLAY ==================== -->
+  <div id="lockOverlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-sage-800/80 backdrop-blur-md transition-opacity duration-500">
+    <div id="lockCard" class="w-full max-w-md bg-white/95 rounded-3xl p-8 shadow-2xl border-2 border-blush-200 text-center relative overflow-hidden">
+      <!-- Decorative background accent -->
+      <div class="absolute -top-12 -right-12 w-32 h-32 bg-blush-100 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-sage-100 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10">
+        <div class="w-16 h-16 mx-auto mb-4 bg-blush-100 text-roseRed-600 rounded-full flex items-center justify-center text-3xl shadow-inner border border-blush-200">
+          🔒
+        </div>
+
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Hello, My Luna! 🌙</h2>
+        <p class="text-sm text-gray-600 mb-6">Answer this tiny security check to open your gift:</p>
+
+        <form id="passcodeForm" onsubmit="unlockWebsite(event)" class="space-y-4">
+          <div class="text-left">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-sage-800 mb-1">
+              When was your boyfriend born? ☀️
+            </label>
+            <input 
+              type="text" 
+              id="passcodeInput" 
+              placeholder="MM/DD/YYYY (e.g. 07/05/2004)" 
+              class="w-full px-4 py-3 rounded-xl border border-sage-300 focus:border-roseRed-500 focus:ring-2 focus:ring-blush-200 outline-none transition text-center font-mono text-gray-700 tracking-widest text-lg bg-sage-50/50"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <p id="lockError" class="text-roseRed-600 text-xs font-medium min-h-[1rem] hidden">
+            Oops! Wrong birthday, love. Try again! 💭
+          </p>
+
+          <button 
+            type="submit" 
+            class="w-full py-3.5 px-6 bg-gradient-to-r from-roseRed-600 to-blush-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-roseRed-500/25 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2"
+          >
+            <span>Unlock My Heart</span>
+            <span>🔑</span>
+          </button>
+        </form>
+
+        <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+          <span>Hint: July 5, 2004</span>
+          <button 
+            onclick="demoUnlock()" 
+            type="button" 
+            class="text-sage-500 hover:text-roseRed-600 underline transition"
+          >
+            Quick Unlock (Demo)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN WEBSITE CONTENT ==================== -->
+  <div id="mainContent" class="opacity-0 transition-opacity duration-700 pointer-events-none min-h-screen flex flex-col">
+    
+    <!-- HEADER / NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-blush-200/60 shadow-sm transition-all">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+        <!-- Logo Branding -->
+        <a href="#home" onclick="switchTab('home')" class="flex items-center space-x-2 group">
+          <span class="text-2xl sm:text-3xl transform group-hover:rotate-12 transition duration-300">🌙</span>
+          <div>
+            <span class="font-serif font-bold text-lg sm:text-xl text-roseRed-700 block leading-tight">Luna & Dawn</span>
+            <span class="text-[10px] sm:text-xs text-sage-800 tracking-wider font-semibold uppercase block">1st Monthsary Edition</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Tabs -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+          <button onclick="switchTab('home')" id="nav-home" class="nav-btn active flex items-center space-x-1.5 px-3 py-2 rounded-full text-sm font-medium transition">
+            <span>🏠</span><span>Home</span>
+          </button>
+          <button onclick="switchTab('letter')" id="nav-letter" class="nav-btn flex items-center space-x-1.5 px-3 py-2 rounded-full text-sm font-medium transition">
+            <span>💌</span><span>Love Letter</span>
+          </button>
+          <button onclick="switchTab('moments')" id="nav-moments" class="nav-btn flex items-center space-x-1.5 px-3 py-2 rounded-full text-sm font-medium transition">
+            <span>🌷</span><span>Our Story</span>
+          </button>
+          <button onclick="switchTab('promises')" id="nav-promises" class="nav-btn flex items-center space-x-1.5 px-3 py-2 rounded-full text-sm font-medium transition">
+            <span>🤍</span><span>Promises</span>
+          </button>
+          <button onclick="switchTab('surprise')" id="nav-surprise" class="nav-btn flex items-center space-x-1.5 px-3 py-2 rounded-full text-sm font-medium transition bg-roseRed-50 text-roseRed-600 border border-blush-200 hover:bg-roseRed-100">
+            <span>🎁</span><span>Surprise</span>
+          </button>
+        </nav>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl text-gray-600 hover:text-roseRed-600 hover:bg-blush-50 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Navigation -->
+      <div id="mobileMenu" class="hidden md:hidden bg-white/95 border-b border-blush-100 px-4 pt-2 pb-4 space-y-1">
+        <button onclick="switchTab('home'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-blush-50 text-gray-700 flex items-center space-x-2">
+          <span>🏠</span><span>Home</span>
+        </button>
+        <button onclick="switchTab('letter'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-blush-50 text-gray-700 flex items-center space-x-2">
+          <span>💌</span><span>Love Letter</span>
+        </button>
+        <button onclick="switchTab('moments'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-blush-50 text-gray-700 flex items-center space-x-2">
+          <span>🌷</span><span>Our Story & Moments</span>
+        </button>
+        <button onclick="switchTab('promises'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-blush-50 text-gray-700 flex items-center space-x-2">
+          <span>🤍</span><span>My Promises</span>
+        </button>
+        <button onclick="switchTab('surprise'); toggleMobileMenu();" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium bg-roseRed-50 text-roseRed-600 flex items-center space-x-2">
+          <span>🎁</span><span>Secret Surprise</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTAINER FOR TAB PAGES -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 relative z-10">
+      
+      <!-- ================= 1. HOME TAB ================= -->
+      <section id="tab-home" class="tab-content block space-y-10 animate-fade-in">
+        <!-- Hero Section -->
+        <div class="text-center space-y-6 pt-4 pb-8 bg-white/70 backdrop-blur-md rounded-3xl p-6 sm:p-10 border border-blush-200/80 shadow-xl relative overflow-hidden">
+          <div class="inline-flex items-center space-x-2 bg-sage-100 text-sage-800 border border-sage-200 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
+            <span>✨</span>
+            <span>A little surprise for my favorite person</span>
+            <span>♡</span>
+          </div>
+
+          <div class="relative py-2">
+            <span class="text-6xl sm:text-7xl inline-block animate-bounce duration-1000">🌙</span>
+            <span class="text-3xl text-roseRed-500 mx-2 inline-block">♥</span>
+            <span class="text-6xl sm:text-7xl inline-block">☀️</span>
+          </div>
+
+          <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-roseRed-700 leading-tight">
+            Happy 1st Monthsary, <br class="sm:hidden" /><span class="text-sage-800 italic font-normal">My Love</span>
+          </h1>
+
+          <p class="max-w-xl mx-auto text-sm sm:text-base text-gray-600 leading-relaxed">
+            For my <strong class="text-roseRed-600">Luna 🌙</strong>, from your <strong class="text-sage-800">Dawn ☀️</strong>. One month down, and I still choose you—today, tomorrow, and on the days that aren't easy.
+          </p>
+
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button onclick="switchTab('letter')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-roseRed-600 to-blush-500 hover:from-roseRed-700 hover:to-blush-600 text-white font-bold rounded-full shadow-lg shadow-roseRed-500/20 transform hover:-translate-y-0.5 transition duration-200 flex items-center justify-center space-x-2">
+              <span>Open Your Letter</span>
+              <span>💌</span>
+            </button>
+            <button onclick="switchTab('moments')" class="w-full sm:w-auto px-6 py-3.5 bg-white border-2 border-sage-200 text-sage-800 font-semibold rounded-full hover:bg-sage-50 transition duration-200">
+              Explore Our Story 🌷
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Highlight Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          <div class="bg-white/80 p-6 rounded-2xl border border-blush-200 shadow-sm hover:shadow-md transition text-center group">
+            <div class="text-3xl mb-2 group-hover:scale-110 transition transform">💌</div>
+            <h3 class="font-serif font-bold text-roseRed-700 text-lg mb-1">Personal Letter</h3>
+            <p class="text-xs text-gray-600">An interactive handwritten-style envelope written just for you.</p>
+          </div>
+          <div class="bg-white/80 p-6 rounded-2xl border border-sage-200 shadow-sm hover:shadow-md transition text-center group">
+            <div class="text-3xl mb-2 group-hover:scale-110 transition transform">🌙☀️</div>
+            <h3 class="font-serif font-bold text-sage-800 text-lg mb-1">Luna & Dawn</h3>
+            <p class="text-xs text-gray-600">Navigating LDRs and late-night body clocks together.</p>
+          </div>
+          <div class="bg-white/80 p-6 rounded-2xl border border-blush-200 shadow-sm hover:shadow-md transition text-center group">
+            <div class="text-3xl mb-2 group-hover:scale-110 transition transform">🎁</div>
+            <h3 class="font-serif font-bold text-roseRed-700 text-lg mb-1">Secret Surprise</h3>
+            <p class="text-xs text-gray-600">A special note for whenever you need a warm smile.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. LOVE LETTER TAB (INTERACTIVE ENVELOPE) ================= -->
+      <section id="tab-letter" class="tab-content hidden space-y-6">
+        <div class="text-center mb-6">
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-roseRed-700">A Letter For You 💌</h2>
+          <p class="text-xs sm:text-sm text-sage-800 font-medium mt-1">Tap the seal or envelope to open your 1st monthsary letter!</p>
+        </div>
+
+        <!-- Interactive 3D Envelope Container -->
+        <div class="flex flex-col items-center justify-center py-6">
+          <div id="envelope" class="envelope-wrapper perspective-1000" onclick="toggleEnvelope()">
+            <!-- Top Flap -->
+            <div class="envelope-flap"></div>
+            
+            <!-- Envelope Seal -->
+            <div class="envelope-seal bg-roseRed-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-md border-2 border-blush-200">
+              💌
+            </div>
+
+            <!-- Paper Letter Inside Envelope -->
+            <div class="letter-paper flex flex-col justify-between">
+              <div class="text-center font-script text-roseRed-700 font-bold text-2xl sm:text-3xl">
+                To My Dearest Luna 💗
+              </div>
+              <p class="text-center font-letter text-sm sm:text-base text-gray-700 line-clamp-3 my-2 leading-relaxed italic">
+                Happy first monthsary, love! I can't believe it's already been one month with us...
+              </p>
+              <div class="text-center text-[11px] font-semibold text-sage-800 uppercase tracking-widest">
+                (Click to Expand & Read)
+              </div>
+            </div>
+
+            <!-- Pocket Front -->
+            <div class="envelope-pocket"></div>
+          </div>
+
+          <!-- Instruction Button -->
+          <div class="mt-8 flex items-center space-x-3">
+            <button onclick="toggleEnvelope()" class="px-6 py-2.5 bg-sage-500 hover:bg-sage-800 text-white font-medium rounded-full text-sm shadow transition flex items-center space-x-2">
+              <span id="envelopeBtnText">Tap To Open Envelope ✉️</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Expanded Reading Modal / Panel (Appears after clicking envelope) -->
+        <div id="fullLetterModal" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 border-2 border-blush-200 shadow-2xl relative space-y-6 max-w-2xl mx-auto">
+          <div class="border-b border-blush-100 pb-4 flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-sage-800">October 18, 2026 • 1st Monthsary</span>
+            <span class="text-2xl">🌙💗☀️</span>
+          </div>
+
+          <div class="font-letter text-[1.05rem] sm:text-[1.15rem] text-gray-800 space-y-6 leading-[1.85] sm:leading-[1.95] max-h-[60vh] overflow-y-auto pr-3 sm:pr-4 custom-scrollbar tracking-normal">
+            <p class="font-script font-bold text-roseRed-700 text-3xl sm:text-4xl leading-tight">To my Luna, 💗</p>
+            
+            <p>Happy first monthsary, love! 🥹💗</p>
+            
+            <p>Can you believe it's already been one month with us? Maybe one month sounds short, but I'm really happy that I get to call you mine and that I get to share these little moments with you. Even if we're far from each other, you still make my days feel special.</p>
+            
+            <p>I know I'm not perfect. I'm <span class="italic text-roseRed-700 font-medium">makulit</span>, sometimes <span class="italic text-roseRed-700 font-medium">matigas ang ulo</span>, and our body clocks are different because I usually sleep late. There may be times when our schedules don't match, when you want to rest and I'm still awake, or when we can't spend as much time together as we want. I'm sorry for the times that might make you feel like I'm not giving you enough time or attention.</p>
+            
+            <p>But love, please know that I'm willing to learn and do better. I can't promise that I'll get everything right all the time, but I can promise that I'll keep trying, listen to you, understand you, and make an effort for us. I want us to talk things out instead of giving up, and I want you to feel loved even on ordinary days.</p>
+            
+            <p>Thank you for being my Luna. Thank you for staying, for making me smile, and for being someone I look forward to talking to. You're special to me in ways that are hard to explain, but I hope I can show you through my actions—not just my words.</p>
+            
+            <p>Even if I'm stubborn sometimes, please remember that my heart is serious about you. I want to be by your side through happy days, tiring days, misunderstandings, and all the little things in between. I'll keep choosing you, respecting you, and doing my best to grow with you.</p>
+            
+            <p>Distance may keep us apart for now, and our sleeping schedules might not always cooperate 😭, but you still have a place in my day and in my heart. I hope this is only the first of many monthsaries we get to celebrate together.</p>
+            
+            <p>I love you so much, love. More than this little website can say. Happy first monthsary to us. Here's to more calls, more laughs, more memories, and one day, more moments where I can hold you instead of just missing you through a screen. 🫶</p>
+            
+            <p class="font-script font-bold text-roseRed-700 text-3xl text-right pt-4">Always your Dawn ☀️</p>
+          </div>
+
+          <div class="pt-4 border-t border-blush-100 flex justify-center">
+            <button onclick="toggleEnvelope()" class="px-6 py-2 bg-roseRed-50 text-roseRed-600 border border-blush-200 hover:bg-roseRed-100 rounded-full text-xs font-semibold transition">
+              Close Letter Fold ✉️
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. OUR STORY & MOMENTS TAB ================= -->
+      <section id="tab-moments" class="tab-content hidden space-y-8">
+        <div class="text-center space-y-2">
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-roseRed-700">Little Things I Want You To Know 🌷</h2>
+          <p class="text-sm text-gray-600 max-w-lg mx-auto">Because you deserve gentle reminders, not just on special occasions.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Card 1 -->
+          <div class="bg-white/90 rounded-2xl p-6 border-2 border-blush-200 shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 bg-blush-100 rounded-2xl flex items-center justify-center text-2xl mb-4 text-roseRed-600">💌</div>
+              <h3 class="font-serif font-bold text-lg text-roseRed-700 mb-2">You Matter To Me</h3>
+              <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Your feelings matter deeply to me, even when we don't see things the exact same way. I'm always listening.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-blush-100 text-[11px] font-semibold text-roseRed-500 uppercase tracking-wider">
+              ALWAYS & FOREVER
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white/90 rounded-2xl p-6 border-2 border-sage-200 shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 bg-sage-100 rounded-2xl flex items-center justify-center text-2xl mb-4 text-sage-800">🌷</div>
+              <h3 class="font-serif font-bold text-lg text-sage-800 mb-2">I'm Still Learning</h3>
+              <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                I won't always get everything right on the first try, but I promise to listen and learn how to love you better each day.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-sage-100 text-[11px] font-semibold text-sage-800 uppercase tracking-wider">
+              GROWING TOGETHER
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white/90 rounded-2xl p-6 border-2 border-blush-200 shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 bg-blush-100 rounded-2xl flex items-center justify-center text-2xl mb-4 text-roseRed-600">🌙☀️</div>
+              <h3 class="font-serif font-bold text-lg text-roseRed-700 mb-2">Us, At Our Own Pace</h3>
+              <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Different schedules and late night body clocks, but the same goal: making time, caring, and choosing each other.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-blush-100 text-[11px] font-semibold text-roseRed-500 uppercase tracking-wider">
+              LUNA & DAWN
+            </div>
+          </div>
+        </div>
+
+        <!-- LDR & Moon/Sun Highlight Banner -->
+        <div class="bg-gradient-to-r from-sage-100 via-blush-50 to-blush-100 rounded-3xl p-6 sm:p-8 border border-sage-200 shadow-inner text-center space-y-3">
+          <span class="text-4xl">🌍✨</span>
+          <h3 class="font-serif font-bold text-xl text-sage-800">Distance Means So Little When You Mean So Much</h3>
+          <p class="text-xs sm:text-sm text-gray-600 max-w-xl mx-auto">
+            One month down in our long-distance journey. Every late night call, every text, and every shared laugh brings us one day closer to holding each other in person.
+          </p>
+        </div>
+      </section>
+
+      <!-- ================= 4. MY PROMISES TAB ================= -->
+      <section id="tab-promises" class="tab-content hidden space-y-6">
+        <div class="text-center space-y-2">
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-roseRed-700">My Promises To You 🤍</h2>
+          <p class="text-sm text-gray-600 max-w-lg mx-auto">Tap any promise to keep a heartfelt seal of love!</p>
+        </div>
+
+        <div class="bg-white/90 rounded-3xl p-6 sm:p-8 border-2 border-blush-200 shadow-lg space-y-4 max-w-2xl mx-auto">
+          
+          <!-- Promise Item 1 -->
+          <label class="promise-card flex items-start space-x-4 p-4 rounded-2xl border border-gray-100 hover:border-blush-200 bg-sage-50/40 cursor-pointer transition">
+            <input type="checkbox" class="mt-1 w-5 h-5 text-roseRed-600 rounded border-gray-300 focus:ring-roseRed-500 accent-roseRed-600" checked />
+            <div class="space-y-1">
+              <span class="text-sm sm:text-base font-semibold text-gray-800 block">Open Communication</span>
+              <p class="text-xs text-gray-600">I'll do my best to communicate openly instead of leaving you guessing.</p>
+            </div>
+          </label>
+
+          <!-- Promise Item 2 -->
+          <label class="promise-card flex items-start space-x-4 p-4 rounded-2xl border border-gray-100 hover:border-blush-200 bg-sage-50/40 cursor-pointer transition">
+            <input type="checkbox" class="mt-1 w-5 h-5 text-roseRed-600 rounded border-gray-300 focus:ring-roseRed-500 accent-roseRed-600" checked />
+            <div class="space-y-1">
+              <span class="text-sm sm:text-base font-semibold text-gray-800 block">Listening With Love</span>
+              <p class="text-xs text-gray-600">I'll listen to your feelings, even when it's hard to hear, and try to understand your side.</p>
+            </div>
+          </label>
+
+          <!-- Promise Item 3 -->
+          <label class="promise-card flex items-start space-x-4 p-4 rounded-2xl border border-gray-100 hover:border-blush-200 bg-sage-50/40 cursor-pointer transition">
+            <input type="checkbox" class="mt-1 w-5 h-5 text-roseRed-600 rounded border-gray-300 focus:ring-roseRed-500 accent-roseRed-600" checked />
+            <div class="space-y-1">
+              <span class="text-sm sm:text-base font-semibold text-gray-800 block">Body Clock Effort</span>
+              <p class="text-xs text-gray-600">I'll make an effort to balance my late-night Dawn body clock with our precious time together.</p>
+            </div>
+          </label>
+
+          <!-- Promise Item 4 -->
+          <label class="promise-card flex items-start space-x-4 p-4 rounded-2xl border border-gray-100 hover:border-blush-200 bg-sage-50/40 cursor-pointer transition">
+            <input type="checkbox" class="mt-1 w-5 h-5 text-roseRed-600 rounded border-gray-300 focus:ring-roseRed-500 accent-roseRed-600" checked />
+            <div class="space-y-1">
+              <span class="text-sm sm:text-base font-semibold text-gray-800 block">Apologizing & Growing</span>
+              <p class="text-xs text-gray-600">I'll say sorry when I'm wrong and show you that I mean it through my actions.</p>
+            </div>
+          </label>
+
+          <!-- Promise Item 5 -->
+          <label class="promise-card flex items-start space-x-4 p-4 rounded-2xl border border-gray-100 hover:border-blush-200 bg-sage-50/40 cursor-pointer transition">
+            <input type="checkbox" class="mt-1 w-5 h-5 text-roseRed-600 rounded border-gray-300 focus:ring-roseRed-500 accent-roseRed-600" checked />
+            <div class="space-y-1">
+              <span class="text-sm sm:text-base font-semibold text-gray-800 block">Choosing Us Daily</span>
+              <p class="text-xs text-gray-600">I'll keep choosing us—not only when everything is easy, but especially when we need patience.</p>
+            </div>
+          </label>
+
+          <div class="p-4 bg-blush-50 rounded-2xl border border-blush-200 text-center">
+            <p class="text-xs text-roseRed-700 italic">
+              "These aren't promises that I'll never make mistakes. They're promises that I'll keep making an effort every single day." 💗
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. SECRET SURPRISE TAB ================= -->
+      <section id="tab-surprise" class="tab-content hidden space-y-6 text-center">
+        <div class="max-w-md mx-auto space-y-4">
+          <div class="text-6xl animate-bounce">🎁</div>
+          <h2 class="font-serif text-3xl font-bold text-roseRed-700">One Last Little Surprise</h2>
+          <p class="text-sm text-gray-600">Tap the button below, love. I have one more sweet thing to tell you.</p>
+
+          <button 
+            id="surpriseBtn"
+            onclick="toggleSurpriseModal()" 
+            class="px-8 py-4 bg-gradient-to-r from-roseRed-600 via-blush-500 to-roseRed-600 text-white font-bold text-base rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 glow-pulse"
+          >
+            Open My Little Surprise ✨
+          </button>
+        </div>
+
+        <!-- Surprise Reveal Modal Popup -->
+        <div id="surpriseModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-sage-800/60 backdrop-blur-sm hidden transition-all">
+          <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full border-2 border-blush-200 shadow-2xl relative space-y-4 transform animate-appear">
+            
+            <div class="w-14 h-14 mx-auto bg-blush-100 text-roseRed-600 rounded-full flex items-center justify-center text-3xl">
+              🌙
+            </div>
+
+            <h3 class="font-serif text-2xl font-bold text-roseRed-700">Hi, My Luna 🌙</h3>
+
+            <div class="text-xs sm:text-sm text-gray-700 leading-relaxed space-y-3 text-left bg-blush-50/50 p-4 rounded-2xl border border-blush-100">
+              <p>
+                If you ever have a difficult day, come back to this page and remember that there's someone right here who cares about you a lot.
+              </p>
+              <p>
+                I may be your <em>makulit</em> Dawn who sleeps late, but I'm also someone who wants to keep learning how to love you better.
+              </p>
+              <p class="font-semibold text-roseRed-600">
+                Thank you for being part of my life. Happy 1st monthsary, love. I love you, always. 💗
+              </p>
+            </div>
+
+            <div class="text-3xl py-2">
+              🌙 <span class="text-roseRed-500 animate-pulse inline-block">♥</span> ☀️
+            </div>
+
+            <button 
+              onclick="toggleSurpriseModal()" 
+              class="w-full py-3 bg-sage-500 hover:bg-sage-800 text-white font-semibold rounded-xl transition text-sm"
+            >
+              Close & Keep In My Heart 💖
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white/80 border-t border-blush-100 py-8 text-center text-xs text-gray-500 space-y-2 mt-auto">
+      <div class="text-xl">🌙 <span class="text-roseRed-500">♡</span> ☀️</div>
+      <p class="font-serif text-sm font-semibold text-roseRed-700">My Luna & Her Dawn</p>
+      <p class="text-gray-600">One month together, and many more memories to make.</p>
+      <p class="text-sage-800 font-medium">Made with all my love • October 18, 2026</p>
+    </footer>
+
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // 1. Particle Generation (Floating Hearts, Leaves, Stars)
+    const particleContainer = document.getElementById('particles-container');
+    const symbols = ['🌸', '🍃', '💖', '✨', '🌙', '🌷'];
+
+    for (let i = 0; i < 24; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDuration = (8 + Math.random() * 12) + 's';
+      p.style.animationDelay = (-Math.random() * 15) + 's';
+      p.style.fontSize = (14 + Math.random() * 16) + 'px';
+      particleContainer.appendChild(p);
+    }
+
+    // 2. Passcode Unlock Logic
+    function unlockWebsite(event) {
+      if(event) event.preventDefault();
+      const input = document.getElementById('passcodeInput').value.trim();
+      const lockOverlay = document.getElementById('lockOverlay');
+      const lockCard = document.getElementById('lockCard');
+      const lockError = document.getElementById('lockError');
+      const mainContent = document.getElementById('mainContent');
+
+      // Validates 07/05/2004 or flexible 7/5/2004
+      const cleanInput = input.replace(/\s+/g, '');
+      if (cleanInput === '07/05/2004' || cleanInput === '7/5/2004' || cleanInput === '07052004') {
+        grantAccess();
+      } else {
+        // Trigger Shake Animation
+        lockCard.classList.add('animate-shake');
+        lockError.classList.remove('hidden');
+        setTimeout(() => lockCard.classList.remove('animate-shake'), 400);
+      }
+    }
+
+    function demoUnlock() {
+      grantAccess();
+    }
+
+    function grantAccess() {
+      const lockOverlay = document.getElementById('lockOverlay');
+      const mainContent = document.getElementById('mainContent');
+
+      // Confetti burst on successful unlock
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ff5c93', '#648e6f', '#e63956']
+      });
+
+      lockOverlay.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        lockOverlay.style.display = 'none';
+        mainContent.classList.remove('opacity-0', 'pointer-events-none');
+      }, 500);
+    }
+
+    // 3. Tab Navigation
+    function switchTab(tabId) {
+      // Hide all tabs
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+
+      // Show selected tab
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if(targetTab) targetTab.classList.remove('hidden');
+
+      // Update Nav Buttons active state
+      const navBtns = document.querySelectorAll('.nav-btn');
+      navBtns.forEach(btn => {
+        btn.classList.remove('bg-roseRed-600', 'text-white', 'shadow-md');
+        btn.classList.add('text-gray-600', 'hover:bg-blush-50');
+      });
+
+      const activeBtn = document.getElementById(`nav-${tabId}`);
+      if(activeBtn && tabId !== 'surprise') {
+        activeBtn.classList.remove('text-gray-600', 'hover:bg-blush-50');
+        activeBtn.classList.add('bg-roseRed-600', 'text-white', 'shadow-md');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 4. Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    // 5. Interactive Envelope Toggle
+    function toggleEnvelope() {
+      const envelope = document.getElementById('envelope');
+      const fullLetterModal = document.getElementById('fullLetterModal');
+      const envelopeBtnText = document.getElementById('envelopeBtnText');
+
+      envelope.classList.toggle('open');
+
+      if (envelope.classList.contains('open')) {
+        envelopeBtnText.textContent = 'Close Envelope ✉️';
+        setTimeout(() => {
+          fullLetterModal.classList.remove('hidden');
+          fullLetterModal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 600);
+      } else {
+        envelopeBtnText.textContent = 'Tap To Open Envelope ✉️';
+        fullLetterModal.classList.add('hidden');
+      }
+    }
+
+    // 6. Secret Surprise Modal & Celebration
+    function toggleSurpriseModal() {
+      const modal = document.getElementById('surpriseModal');
+      const isHidden = modal.classList.contains('hidden');
+
+      if (isHidden) {
+        modal.classList.remove('hidden');
+        confetti({
+          particleCount: 100,
+          spread: 80,
+          origin: { y: 0.5 },
+          colors: ['#ff8bb3', '#e63956', '#a1c2a8']
+        });
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    // Initialize Default Active Nav Tab styling
+    document.addEventListener("DOMContentLoaded", function() {
+      const homeBtn = document.getElementById('nav-home');
+      if(homeBtn) {
+        homeBtn.classList.add('bg-roseRed-600', 'text-white', 'shadow-md');
+      }
+    });
+  </script>
+</body>
+</html>
